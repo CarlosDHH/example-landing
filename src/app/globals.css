@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+/* Paleta tomada del logo de la marca: crema, chocolate y caramelo */
+@theme {
+  --color-cream-50: #fcf8f2;
+  --color-cream-100: #f7efe4;
+  --color-cream-200: #efe2d0;
+  --color-cream-300: #e3cfb4;
+  --color-caramel-300: #dcb27c;
+  --color-caramel-400: #c99459;
+  --color-caramel-500: #b5793a;
+  --color-caramel-600: #96612b;
+  --color-cocoa-500: #8a4a32;
+  --color-cocoa-600: #6b2e1f;
+  --color-cocoa-700: #4e2216;
+  --color-cocoa-800: #3a1a11;
+  --color-cocoa-900: #2a130c;
+
+  --font-serif: "Cormorant Garamond", ui-serif, Georgia, serif;
+  --font-sans: "Jost Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-script: "Great Vibes", cursive;
+}
+
+:root {
+  --background: var(--color-cream-50);
+  --foreground: var(--color-cocoa-900);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+.eyebrow {
+  font-size: 0.72rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-caramel-600);
+}
+
+.section-dark .eyebrow {
+  color: var(--color-caramel-300);
+}
+
+/* Foco visible y consistente para navegación con teclado (WCAG 2.4.7) */
+:focus-visible {
+  outline: 2px solid var(--color-caramel-500);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+.section-dark :focus-visible {
+  outline-color: var(--color-caramel-300);
+}
+
+/* Ola del hero: desplazamiento horizontal continuo (el SVG mide 200% y se repite cada 50%) */
+@keyframes wave-slide {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+.wave { will-change: transform; }
+.wave-front { animation: wave-slide 18s linear infinite; }
+.wave-back { animation: wave-slide 28s linear infinite reverse; }
+
+@media (prefers-reduced-motion: reduce) {
+  .wave { animation: none !important; will-change: auto; }
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* Las anclas (#pasteles, #personalizado…) no quedan tapadas por el encabezado fijo */
+section[id] {
+  scroll-margin-top: 5.5rem;
+}
