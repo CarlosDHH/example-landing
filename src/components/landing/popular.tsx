@@ -7,7 +7,7 @@ import { CatalogGrid } from "./catalog-grid";
 export function Popular() {
   const used = new Set(products.map((p) => p.categorySlug));
   return (
-    <section id="pasteles" aria-labelledby="pasteles-titulo" className="bg-cream-100/60">
+    <section id="pasteles" aria-labelledby="pasteles-titulo" className="bg-cream-100">
       <div className="mx-auto max-w-7xl px-5 py-16 lg:px-8 lg:py-20">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>

@@ -11,12 +11,12 @@ export function Footer() {
         <h2 className="mx-auto mt-3 max-w-2xl font-serif text-4xl leading-tight sm:text-5xl">
           Hagamos algo digno de recordar
         </h2>
-        <a
-          href="#personalizado"
-          className="mt-8 inline-flex rounded-full border border-cream-100/40 px-7 py-3 text-sm transition hover:bg-cream-100 hover:text-cocoa-800"
+        <Link
+          href="/#personalizado"
+          className="mt-8 inline-flex rounded-full border border-cream-100/40 px-7 py-3 text-sm transition-[background-color,color,scale] hover:bg-cream-100 hover:text-cocoa-800 active:scale-[0.96]"
         >
           Crea tu pastel →
-        </a>
+        </Link>
       </div>
       <div className="border-t border-cream-100/10">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 px-5 py-8 sm:flex-row lg:px-8">

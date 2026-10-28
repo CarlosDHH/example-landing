@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { site } from "@/config/site";
 import { CakeArt } from "@/components/ui/cake-art";
 import { ArrowRight, Heart, Leaf, Whisk } from "@/components/ui/icons";
@@ -13,29 +14,29 @@ export function Hero() {
   return (
     <section id="inicio" className="relative overflow-hidden bg-cream-100">
       <div className="mx-auto grid max-w-7xl items-center gap-10 px-5 pt-10 pb-20 lg:grid-cols-[1.05fr_1fr] lg:gap-12 lg:px-8 lg:pt-20 lg:pb-28">
-        <div className="min-w-0">
+        <div className="t-stagger-load min-w-0">
           <p className="eyebrow">{site.tagline}</p>
-          <h1 className="mt-4 font-serif text-[2.6rem] leading-[1.04] font-medium text-cocoa-800 sm:text-6xl lg:text-7xl">
+          <h1 className="t-stagger-line t-stagger-line--1 mt-4 font-serif text-[2.6rem] leading-[1.04] font-medium text-cocoa-800 sm:text-6xl lg:text-7xl">
             Cada celebración merece un pastel{" "}
             <em className="font-normal text-caramel-600">inolvidable</em>
           </h1>
-          <p className="mt-5 max-w-lg text-lg leading-relaxed text-cocoa-700/90">
+          <p className="t-stagger-line t-stagger-line--2 mt-5 max-w-lg text-lg leading-relaxed text-cocoa-700/90">
             Repostería fina hecha a mano para tus cumpleaños, bodas y momentos especiales. Pide en
             línea y te lo llevamos a casa en {site.city}.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <a
-              href="#personalizado"
-              className="inline-flex items-center gap-2 rounded-full bg-cocoa-700 px-7 py-3.5 text-cream-50 transition hover:bg-cocoa-800"
+          <div className="t-stagger-line t-stagger-line--3 mt-8 flex flex-wrap gap-3">
+            <Link
+              href="/#personalizado"
+              className="inline-flex items-center gap-2 rounded-full bg-cocoa-700 px-7 py-3.5 text-cream-50 transition-[background-color,scale] hover:bg-cocoa-800 active:scale-[0.96]"
             >
               Diseña tu pastel <ArrowRight className="h-4 w-4" />
-            </a>
-            <a
-              href="#pasteles"
-              className="inline-flex items-center gap-2 rounded-full border border-cocoa-700/30 px-7 py-3.5 text-cocoa-700 transition hover:border-cocoa-700"
+            </Link>
+            <Link
+              href="/#pasteles"
+              className="inline-flex items-center gap-2 rounded-full border border-cocoa-700/30 px-7 py-3.5 text-cocoa-700 transition-[border-color,scale] hover:border-cocoa-700 active:scale-[0.96]"
             >
               Ver catálogo
-            </a>
+            </Link>
           </div>
           {/* En móvil los sabores van aquí, como fila deslizable */}
           <FlavorChips className="-mx-5 mt-8 flex gap-2 overflow-x-auto px-5 pb-2 sm:hidden" />

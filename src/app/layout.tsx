@@ -9,15 +9,19 @@ import "./globals.css";
 import { site } from "@/config/site";
 import { Footer } from "@/components/landing/footer";
 import { Header } from "@/components/landing/header";
+import { Watermark } from "@/components/ui/watermark";
 import { WhatsAppFloat } from "@/components/landing/whatsapp-float";
+
+// Mientras la ciudad sea el marcador de la plantilla, no se publica en título ni descripción
+const hasCity = site.city !== "Ciudad";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: `${site.name} | Pastelería en ${site.city} · Pasteles a domicilio`,
+    default: `${site.name} | Pastelería${hasCity ? ` en ${site.city}` : ""} · Pasteles a domicilio`,
     template: `%s | ${site.name}`,
   },
-  description: `${site.description} Pastelería fina en ${site.city}.`,
+  description: hasCity ? `${site.description} Pastelería fina en ${site.city}.` : site.description,
   alternates: { canonical: "/" },
   openGraph: {
     title: `${site.name} · ${site.tagline}`,
@@ -34,15 +38,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="es-MX" className="h-full antialiased">
       <body className="flex min-h-full flex-col">
+        <Watermark />
+        <a
+          href="#contenido"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:rounded-full focus:bg-cocoa-700 focus:px-5 focus:py-3 focus:text-cream-50"
+        >
+          Saltar al contenido
+        </a>
         <Header />
-        <main className="relative isolate flex-1">
-          {/* Marca de agua: se desplaza con la página y queda detrás; las secciones con fondo sólido la tapan */}
-          <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center overflow-hidden">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.svg" alt="" className="w-[min(85vw,640px)] opacity-[0.12]" />
-          </div>
-          {children}
-        </main>
+        <main id="contenido" tabIndex={-1} className="flex-1 outline-none">{children}</main>
         <Footer />
         <WhatsAppFloat />
       </body>

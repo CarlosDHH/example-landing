@@ -44,5 +44,11 @@ next-env.d.ts
 
 CLAUDE.md
 AGENTS.md
+DESIGN.md
+PRODUCT.md
+skills-lock.json
 
 package-lock.json
+
+.impeccable
+

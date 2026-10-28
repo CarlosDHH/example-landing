@@ -24,7 +24,7 @@ export function Occasions() {
                 href={whatsappLink(`Hola ${site.name}, quiero cotizar ${msg}.`)}
                 target="_blank"
                 rel="noopener"
-                className={`group flex h-40 flex-col sm:h-52 items-center justify-center gap-4 rounded-t-[6rem] rounded-b-3xl px-4 text-center transition ${
+                className={`group flex h-40 flex-col sm:h-52 items-center justify-center gap-4 rounded-t-[6rem] rounded-b-3xl px-4 text-center transition-transform active:scale-[0.96] ${
                   i === 0
                     ? "bg-cocoa-700 ring-1 ring-caramel-400/60"
                     : "bg-cream-100 text-cocoa-800 hover:-translate-y-1"
@@ -34,7 +34,7 @@ export function Occasions() {
                   <Icon className={`h-7 w-7 ${i === 0 ? "text-caramel-300" : "text-caramel-600"}`} />
                 </span>
                 <span className="text-xs font-medium tracking-[0.18em] uppercase">{title}</span>
-                <ArrowRight className="h-4 w-4 opacity-60 transition group-hover:translate-x-1" />
+                <ArrowRight className="h-4 w-4 opacity-60 transition-transform group-hover:translate-x-1" />
               </a>
             </li>
           ))}

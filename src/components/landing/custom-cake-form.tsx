@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { site, whatsappLink } from "@/config/site";
 import { CakeArt } from "@/components/ui/cake-art";
 import { WhatsApp } from "@/components/ui/icons";
+import { Reveal } from "@/components/ui/reveal";
+import { SuccessCheck } from "@/components/ui/success-check";
 import { SELECT_FLAVOR_EVENT } from "./flavor-chips";
 
 const FLAVORS = ["Chocolate", "Vainilla", "Fresa", "Tres leches", "Red velvet", "Zanahoria", "Moka"];
@@ -11,7 +13,8 @@ const FILLINGS = ["Sin relleno", "Fresa", "Cajeta", "Nutella", "Queso crema", "D
 const SIZES = ["Chico (8–10 personas)", "Mediano (15–20 personas)", "Grande (25–30 personas)"];
 
 const input =
-  "w-full rounded-xl border border-cream-300 bg-white px-4 py-3 text-cocoa-800 outline-none transition placeholder:text-cocoa-700/40 focus:border-caramel-500 focus:ring-2 focus:ring-caramel-300/40";
+  "w-full rounded-xl border border-cream-300 bg-white px-4 py-3 text-cocoa-800 outline-none transition-[border-color,box-shadow] placeholder:text-cocoa-700/70 focus:border-caramel-500 focus:ring-2 focus:ring-caramel-300/40";
+const errCls = "mt-1.5 text-xs text-error-600";
 const labelCls = "mb-1.5 block text-xs font-medium tracking-wide text-cocoa-700 uppercase";
 
 /** "2026-11-20" → "viernes 20 de noviembre" */
@@ -46,6 +49,9 @@ export function CustomCakeForm() {
     neighborhood: "",
   });
   const [done, setDone] = useState<string | null>(null);
+  // Panel reveal solo después de la primera interacción (sin animar la carga de la página)
+  const [touched, setTouched] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Los atajos de sabor del inicio preseleccionan el sabor aquí
   useEffect(() => {
@@ -57,8 +63,49 @@ export function CustomCakeForm() {
     return () => window.removeEventListener(SELECT_FLAVOR_EVENT, onSelect);
   }, []);
 
-  const set = (k: keyof typeof form) => (e: { target: { value: string } }) =>
+  const delivery = form.fulfillment === "DELIVERY";
+
+  const set = (k: keyof typeof form) => (e: { target: { value: string } }) => {
     setForm((f) => ({ ...f, [k]: e.target.value }));
+    // Al corregir un campo se limpia su error
+    setErrors((prev) => {
+      if (!(k in prev)) return prev;
+      const rest = { ...prev };
+      delete rest[k];
+      return rest;
+    });
+  };
+
+  const ids: Record<string, string> = { name: "name", phone: "phone", date: "date", time: "time", postalCode: "cp", neighborhood: "neighborhood", street: "street" };
+
+  function validate() {
+    const e: Record<string, string> = {};
+    if (!form.name.trim()) e.name = "Escribe tu nombre.";
+    const digits = form.phone.replace(/[^0-9]/g, "");
+    if (digits.length < 10 || digits.length > 13) e.phone = "Escribe un WhatsApp de 10 dígitos.";
+    if (!form.date) e.date = "Elige una fecha.";
+    else if (form.date < minDate()) e.date = "Elige una fecha con al menos 3 días de anticipación.";
+    if (!form.time || form.time < "09:00" || form.time > "19:00") e.time = "Elige una hora entre 9:00 y 19:00.";
+    if (delivery) {
+      if (!/^[0-9]{5}$/.test(form.postalCode)) e.postalCode = "El código postal tiene 5 dígitos.";
+      if (!form.neighborhood.trim()) e.neighborhood = "Escribe tu colonia.";
+      if (!form.street.trim()) e.street = "Escribe calle y número.";
+    }
+    return e;
+  }
+
+  /** Props comunes de un campo con error: borde, aria y mensaje asociado */
+  const field = (k: string) => ({
+    className: `${input} t-input${errors[k] ? " is-error" : ""}`,
+    "aria-invalid": errors[k] ? true : undefined,
+    "aria-describedby": errors[k] ? `${ids[k] ?? k}-error` : undefined,
+  });
+  const msg = (k: string) =>
+    errors[k] ? (
+      <p id={`${ids[k] ?? k}-error`} role="alert" className={`t-rise-in ${errCls}`}>
+        {errors[k]}
+      </p>
+    ) : null;
 
   function buildMessage() {
     const lines = [
@@ -78,6 +125,25 @@ export function CustomCakeForm() {
 
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
+    const found = validate();
+    setErrors(found);
+    const keys = Object.keys(found);
+    if (keys.length) {
+      // Replay del shake desde un estado limpio y foco en el primer campo con error
+      requestAnimationFrame(() => {
+        keys.forEach((k) => {
+          const el = document.getElementById(ids[k] ?? k);
+          if (!el) return;
+          el.classList.remove("is-shaking");
+          void el.offsetWidth;
+          el.classList.add("is-shaking");
+          setTimeout(() => el.classList.remove("is-shaking"), 300);
+        });
+        document.getElementById(ids[keys[0]] ?? keys[0])?.focus();
+      });
+      return;
+    }
+    setTouched(true);
     setDone(buildMessage());
     // Mostrar la confirmación completa (debajo del encabezado fijo)
     requestAnimationFrame(() =>
@@ -101,8 +167,10 @@ export function CustomCakeForm() {
         </div>
 
         {done ? (
+          <Reveal key="done">
           <div className="flex flex-col items-start justify-center rounded-3xl bg-cream-100 p-8 sm:p-10">
-            <p className="eyebrow">¡Casi listo!</p>
+            <SuccessCheck className="text-caramel-500" />
+            <p className="eyebrow mt-4">¡Casi listo!</p>
             <h3 className="mt-3 font-serif text-4xl text-cocoa-800">
               Tu pedido está armado
             </h3>
@@ -116,7 +184,7 @@ export function CustomCakeForm() {
               href={whatsappLink(done)}
               target="_blank"
               rel="noopener"
-              className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#1f8f4e] px-7 py-3.5 text-white transition hover:bg-[#187540]"
+              className="mt-6 inline-flex items-center gap-2 rounded-full bg-whatsapp-500 px-7 py-3.5 text-white transition-[background-color,scale] hover:bg-whatsapp-600 active:scale-[0.96]"
             >
               <WhatsApp className="h-5 w-5" /> Enviar por WhatsApp
             </a>
@@ -124,15 +192,19 @@ export function CustomCakeForm() {
               Hacer otro pedido
             </button>
           </div>
+          </Reveal>
         ) : (
-          <form onSubmit={onSubmit} className="grid gap-5 rounded-3xl bg-cream-100 p-6 sm:grid-cols-2 sm:p-10">
+          <Reveal key="form" animate={touched}>
+          <form noValidate onSubmit={onSubmit} className="grid gap-5 rounded-3xl bg-cream-100 p-6 sm:grid-cols-2 sm:p-10">
             <div>
               <label className={labelCls} htmlFor="name">Nombre</label>
-              <input id="name" required autoComplete="name" className={input} value={form.name} onChange={set("name")} placeholder="¿A nombre de quién?" />
+              <input id="name" autoComplete="name" {...field("name")} value={form.name} onChange={set("name")} placeholder="¿A nombre de quién?" />
+              {msg("name")}
             </div>
             <div>
               <label className={labelCls} htmlFor="phone">WhatsApp</label>
-              <input id="phone" required type="tel" autoComplete="tel-national" inputMode="tel" pattern="[\d\s+()-]{10,16}" className={input} value={form.phone} onChange={set("phone")} placeholder="10 dígitos" />
+              <input id="phone" type="tel" autoComplete="tel-national" inputMode="tel" {...field("phone")} value={form.phone} onChange={set("phone")} placeholder="10 dígitos" />
+              {msg("phone")}
             </div>
             <div>
               <label className={labelCls} htmlFor="flavor">Sabor</label>
@@ -150,7 +222,7 @@ export function CustomCakeForm() {
               <legend className={labelCls}>Tamaño</legend>
               <div className="grid gap-3 sm:grid-cols-3">
                 {SIZES.map((s) => (
-                  <label key={s} className={`cursor-pointer rounded-xl border px-4 py-3 text-sm transition has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-caramel-500 ${form.size === s ? "border-caramel-500 bg-white text-cocoa-800 ring-2 ring-caramel-300/40" : "border-cream-300 text-cocoa-700"}`}>
+                  <label key={s} className={`cursor-pointer rounded-xl border px-4 py-3 text-sm transition-[border-color,box-shadow] has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-caramel-500 ${form.size === s ? "border-caramel-500 bg-white text-cocoa-800 ring-2 ring-caramel-300/40" : "border-cream-300 text-cocoa-700"}`}>
                     <input type="radio" name="size" value={s} checked={form.size === s} onChange={set("size")} className="sr-only" />
                     {s}
                   </label>
@@ -167,51 +239,61 @@ export function CustomCakeForm() {
             </div>
             <div>
               <label className={labelCls} htmlFor="date">Fecha</label>
-              <input id="date" required type="date" onFocus={(e) => (e.currentTarget.min = minDate())} className={input} value={form.date} onChange={set("date")} />
+              <input id="date" type="date" onFocus={(e) => (e.currentTarget.min = minDate())} {...field("date")} value={form.date} onChange={set("date")} />
+              {msg("date")}
             </div>
             <div>
               <label className={labelCls} htmlFor="time">Hora</label>
-              <input id="time" required type="time" min="09:00" max="19:00" className={input} value={form.time} onChange={set("time")} />
+              <input id="time" type="time" min="09:00" max="19:00" {...field("time")} value={form.time} onChange={set("time")} />
+              {msg("time")}
             </div>
             <fieldset className="sm:col-span-2">
               <legend className={labelCls}>¿Cómo lo recibes?</legend>
               <div className="grid grid-cols-2 gap-3">
                 {([["DELIVERY", "Entrega a domicilio"], ["PICKUP", "Recojo en sucursal"]] as const).map(([v, l]) => (
-                  <label key={v} className={`cursor-pointer rounded-xl border px-4 py-3 text-center text-sm transition has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-caramel-500 ${form.fulfillment === v ? "border-caramel-500 bg-white text-cocoa-800 ring-2 ring-caramel-300/40" : "border-cream-300 text-cocoa-700"}`}>
+                  <label key={v} className={`cursor-pointer rounded-xl border px-4 py-3 text-center text-sm transition-[border-color,box-shadow] has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-caramel-500 ${form.fulfillment === v ? "border-caramel-500 bg-white text-cocoa-800 ring-2 ring-caramel-300/40" : "border-cream-300 text-cocoa-700"}`}>
                     <input type="radio" name="fulfillment" value={v} checked={form.fulfillment === v} onChange={set("fulfillment")} className="sr-only" />
                     {l}
                   </label>
                 ))}
               </div>
             </fieldset>
-            {form.fulfillment === "DELIVERY" && (
-              <>
+            <div className="t-acc -mt-5 sm:col-span-2" data-open={delivery}>
+              <div className="t-acc-panel" inert={!delivery}>
+                <div className="t-acc-panel-inner -mx-1 -mb-1 px-1 pb-1">
+                  <div className="grid gap-5 pt-5 sm:grid-cols-2">
                 <div>
                   <label className={labelCls} htmlFor="cp">Código postal</label>
                   <input
-                    id="cp" required inputMode="numeric" pattern="\d{5}" maxLength={5} className={input}
+                    id="cp" inputMode="numeric" maxLength={5} {...field("postalCode")}
                     value={form.postalCode}
                     onChange={set("postalCode")}
                     placeholder="5 dígitos"
                   />
+                  {msg("postalCode")}
                 </div>
                 <div>
                   <label className={labelCls} htmlFor="neighborhood">Colonia</label>
-                  <input id="neighborhood" required className={input} value={form.neighborhood} onChange={set("neighborhood")} />
+                  <input id="neighborhood" {...field("neighborhood")} value={form.neighborhood} onChange={set("neighborhood")} />
+                  {msg("neighborhood")}
                 </div>
                 <div className="sm:col-span-2">
                   <label className={labelCls} htmlFor="street">Calle y número</label>
-                  <input id="street" required autoComplete="address-line1" className={input} value={form.street} onChange={set("street")} />
+                  <input id="street" autoComplete="address-line1" {...field("street")} value={form.street} onChange={set("street")} />
+                  {msg("street")}
                 </div>
-              </>
-            )}
-            <button className="inline-flex items-center justify-center gap-2 rounded-full bg-cocoa-700 px-7 py-4 text-cream-50 transition hover:bg-cocoa-800 sm:col-span-2">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button className="inline-flex items-center justify-center gap-2 rounded-full bg-cocoa-700 px-7 py-4 text-cream-50 transition-[background-color,scale] hover:bg-cocoa-800 active:scale-[0.96] sm:col-span-2">
               Continuar a WhatsApp
             </button>
             <p className="text-center text-xs text-cocoa-700/80 sm:col-span-2">
-              Al enviar aceptas nuestro <a href="/aviso-de-privacidad" className="inline-block py-2 underline">aviso de privacidad</a>.
+              Al enviar aceptas nuestro <a href="/aviso-de-privacidad" className="inline-block py-3.5 underline">aviso de privacidad</a>.
             </p>
           </form>
+          </Reveal>
         )}
       </div>
     </section>

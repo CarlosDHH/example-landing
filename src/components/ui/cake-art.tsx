@@ -51,7 +51,7 @@ export function CakeArt({
         ))}
       </svg>
       {label && (
-        <span className="absolute bottom-3 left-3 rounded-full bg-white/70 px-3 py-1 text-[10px] tracking-widest text-cocoa-600 uppercase backdrop-blur">
+        <span className="absolute bottom-3 left-3 rounded-full bg-white/70 px-3 py-1 text-[0.72rem] tracking-widest text-cocoa-600 uppercase backdrop-blur">
           {label}
         </span>
       )}
