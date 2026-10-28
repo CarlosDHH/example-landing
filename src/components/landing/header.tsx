@@ -41,8 +41,8 @@ export function Header() {
           <Image src="/logo.svg" alt={`Logo de ${site.name}`} width={56} height={56} priority />
           <span className="leading-tight">
             <span className="block font-serif text-2xl font-semibold text-cocoa-700">{site.name}</span>
-            <span className="block text-[0.72rem] tracking-[0.25em] text-caramel-600 uppercase">
-              {site.shortTagline}
+            <span className="block text-[10px] tracking-[0.25em] text-caramel-600 uppercase">
+              Alta repostería
             </span>
           </span>
         </Link>
@@ -60,7 +60,7 @@ export function Header() {
             href={whatsappLink(`Hola ${site.name}, me gustaría hacer un pedido.`)}
             target="_blank"
             rel="noopener"
-            className="hidden items-center gap-2 rounded-full bg-cocoa-700 px-5 py-3 text-sm text-cream-50 transition-[background-color,scale] hover:bg-cocoa-800 active:scale-[0.96] sm:inline-flex"
+            className="hidden items-center gap-2 rounded-full bg-cocoa-700 px-5 py-2.5 text-sm text-cream-50 transition-[background-color,scale] hover:bg-cocoa-800 active:scale-[0.96] sm:inline-flex"
           >
             <WhatsApp className="h-4 w-4" /> Pedir ahora
           </a>

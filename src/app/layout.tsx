@@ -12,16 +12,13 @@ import { Header } from "@/components/landing/header";
 import { Watermark } from "@/components/ui/watermark";
 import { WhatsAppFloat } from "@/components/landing/whatsapp-float";
 
-// Mientras la ciudad sea el marcador de la plantilla, no se publica en título ni descripción
-const hasCity = site.city !== "Ciudad";
-
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: `${site.name} | Pastelería${hasCity ? ` en ${site.city}` : ""} · Pasteles a domicilio`,
+    default: `${site.name} | Pastelería en ${site.city} · Pasteles a domicilio`,
     template: `%s | ${site.name}`,
   },
-  description: hasCity ? `${site.description} Pastelería fina en ${site.city}.` : site.description,
+  description: `${site.description} Pastelería fina en ${site.city}.`,
   alternates: { canonical: "/" },
   openGraph: {
     title: `${site.name} · ${site.tagline}`,
@@ -39,14 +36,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="es-MX" className="h-full antialiased">
       <body className="flex min-h-full flex-col">
         <Watermark />
-        <a
-          href="#contenido"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:rounded-full focus:bg-cocoa-700 focus:px-5 focus:py-3 focus:text-cream-50"
-        >
-          Saltar al contenido
-        </a>
         <Header />
-        <main id="contenido" tabIndex={-1} className="flex-1 outline-none">{children}</main>
+        <main className="flex-1">{children}</main>
         <Footer />
         <WhatsAppFloat />
       </body>

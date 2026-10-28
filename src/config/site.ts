@@ -8,8 +8,6 @@ export const site = {
   // Dominio público del sitio (sin / al final). Se usa en SEO, sitemap y JSON-LD.
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
   tagline: "Pastelería fina & alta repostería",
-  // Línea corta bajo el nombre en el encabezado
-  shortTagline: "Alta repostería",
   description:
     "Pasteles para cumpleaños, bodas y cada celebración. Haz tu pedido en línea y recíbelo en tu casa.",
   // Número de WhatsApp en formato internacional, sin + ni espacios (52 + 10 dígitos)
