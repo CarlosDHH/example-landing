@@ -9,6 +9,7 @@ import "./globals.css";
 import { site } from "@/config/site";
 import { Footer } from "@/components/landing/footer";
 import { Header } from "@/components/landing/header";
+import { ScrollEffects } from "@/components/ui/scroll-effects";
 import { Watermark } from "@/components/ui/watermark";
 import { WhatsAppFloat } from "@/components/landing/whatsapp-float";
 
@@ -37,7 +38,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="flex min-h-full flex-col">
         <Watermark />
         <Header />
-        <main className="flex-1">{children}</main>
+        <main className="flex-1">
+          <ScrollEffects>{children}</ScrollEffects>
+        </main>
         <Footer />
         <WhatsAppFloat />
       </body>

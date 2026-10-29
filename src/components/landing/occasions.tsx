@@ -19,7 +19,7 @@ export function Occasions() {
         </div>
         <ul className="grid grid-cols-2 gap-4 md:grid-cols-4">
           {occasions.map(({ icon: Icon, title, msg }, i) => (
-            <li key={title}>
+            <li key={title} data-reveal>
               <a
                 href={whatsappLink(`Hola ${site.name}, quiero cotizar ${msg}.`)}
                 target="_blank"

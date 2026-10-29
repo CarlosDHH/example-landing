@@ -2,7 +2,10 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
 import { site, whatsappLink } from "@/config/site";
 import { Close, Menu, WhatsApp } from "@/components/ui/icons";
 
@@ -14,9 +17,24 @@ const nav = [
   { href: "/#contacto", label: "Contacto" },
 ];
 
+gsap.registerPlugin(useGSAP, ScrollTrigger);
+
 export function Header() {
+  const headerRef = useRef<HTMLElement>(null);
   const [open, setOpen] = useState(false);
   const [closing, setClosing] = useState(false);
+
+  // Al pasar los primeros 40 px de scroll el encabezado se compacta (clase .is-scrolled)
+  useGSAP(
+    () => {
+      ScrollTrigger.create({
+        start: 40,
+        end: "max",
+        toggleClass: { targets: headerRef.current, className: "is-scrolled" },
+      });
+    },
+    { scope: headerRef },
+  );
 
   // Menu dropdown: .is-closing dura lo que el CSS tarda en cerrar
   const toggle = (next: boolean) => {
@@ -35,8 +53,8 @@ export function Header() {
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
   return (
-    <header className="sticky top-0 z-40 border-b border-cream-200/80 bg-cream-50/90 backdrop-blur">
-      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 lg:px-8">
+    <header ref={headerRef} className="group sticky top-0 z-40 border-b border-cream-200/80 bg-cream-50/90 backdrop-blur transition-shadow duration-300 [&.is-scrolled]:shadow-sm [&.is-scrolled]:shadow-cocoa-900/5">
+      <div className="mx-auto flex h-20 max-w-7xl transition-[height] duration-300 group-[.is-scrolled]:h-16 items-center justify-between px-5 lg:px-8">
         <Link href="/#inicio" className="flex items-center gap-3">
           <Image src="/logo.svg" alt={`Logo de ${site.name}`} width={56} height={56} priority />
           <span className="leading-tight">
@@ -49,7 +67,11 @@ export function Header() {
 
         <nav aria-label="Principal" className="hidden items-center gap-9 text-sm text-cocoa-700 md:flex">
           {nav.map((n) => (
-            <Link key={n.href} href={n.href} className="py-3 transition-colors hover:text-caramel-600">
+            <Link
+              key={n.href}
+              href={n.href}
+              className="relative py-3 transition-colors hover:text-caramel-600 after:absolute after:inset-x-0 after:bottom-2 after:h-px after:origin-left after:scale-x-0 after:bg-caramel-500 after:transition-transform aria-[current]:text-caramel-600 aria-[current]:after:scale-x-100"
+            >
               {n.label}
             </Link>
           ))}

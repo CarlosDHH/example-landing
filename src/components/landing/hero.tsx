@@ -38,8 +38,8 @@ export function Hero() {
               Ver catálogo
             </Link>
           </div>
-          {/* En móvil los sabores van aquí, como fila deslizable */}
-          <FlavorChips className="-mx-5 mt-8 flex gap-2 overflow-x-auto px-5 pb-2 sm:hidden" />
+          {/* En móvil los sabores van aquí, en cuadrícula de 2 columnas */}
+          <FlavorChips className="mt-8 grid grid-cols-2 gap-2 sm:hidden" />
           <ul className="mt-10 grid max-w-xl grid-cols-3 gap-5">
             {features.map(({ icon: Icon, title, text }) => (
               <li key={title}>
@@ -51,7 +51,7 @@ export function Hero() {
           </ul>
         </div>
 
-        <div className="relative mx-auto w-full max-w-sm sm:max-w-none">
+        <div data-parallax="40" className="relative mx-auto w-full max-w-sm sm:max-w-none">
           <p
             aria-hidden="true"
             className="absolute -top-2 right-6 z-10 hidden rotate-[-8deg] font-script text-4xl text-cocoa-600 sm:block"

@@ -17,7 +17,7 @@ export function Testimonials() {
       <h2 className="mt-3 font-serif text-4xl text-cocoa-800 sm:text-5xl">Palabras dulces</h2>
       <ul className="mt-10 grid gap-6 md:grid-cols-3">
         {reviews.map((r, i) => (
-          <li key={i} className="border border-dashed border-caramel-300 bg-white p-7">
+          <li key={i} data-reveal className="border border-dashed border-caramel-300 bg-white p-7">
             <div className="flex gap-1 text-caramel-400">
               {Array.from({ length: 5 }).map((_, j) => (
                 <Star key={j} className="h-4 w-4" />

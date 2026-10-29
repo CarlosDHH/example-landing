@@ -65,14 +65,14 @@ export function CatalogGrid({
       <div
         role="group"
         aria-label="Filtrar por categoría"
-        className="-mx-5 mt-8 flex gap-2 overflow-x-auto px-5 pb-2 sm:mx-0 sm:flex-wrap sm:px-0"
+        className="mt-8 flex flex-wrap gap-2"
       >
         {chips.map((c) => (
           <button
             key={c.slug}
             onClick={() => selectFilter(c.slug)}
             aria-pressed={filter === c.slug}
-            className={`shrink-0 rounded-full border px-5 py-3 text-sm transition-[background-color,border-color,color,scale] active:scale-[0.96] ${
+            className={`rounded-full border px-5 py-3 text-sm transition-[background-color,border-color,color,scale] active:scale-[0.96] ${
               filter === c.slug
                 ? "border-cocoa-700 bg-cocoa-700 text-cream-50"
                 : "border-cream-300 bg-white text-cocoa-700 hover:border-caramel-400"
@@ -87,7 +87,7 @@ export function CatalogGrid({
       <div ref={innerRef}>
       <ul aria-live="polite" className="mt-6 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
         {visible.map((p, i) => (
-          <li key={p.id} className={`${changed ? "t-rise-in " : ""}group flex flex-col overflow-hidden rounded-2xl bg-white sm:rounded-3xl shadow-sm shadow-cocoa-900/5`}>
+          <li key={p.id} data-reveal className={`${changed ? "t-rise-in " : ""}group flex flex-col overflow-hidden rounded-2xl bg-white sm:rounded-3xl shadow-sm shadow-cocoa-900/5`}>
             <div className="overflow-hidden">
               <CakeArt
                 tone={tones[i % tones.length]}
