@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -20,6 +20,27 @@ gsap.registerPlugin(useGSAP, ScrollTrigger);
 export function ScrollEffects({ children }: { children: ReactNode }) {
   const root = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+
+  // Enlaces a una ancla de la página actual (/#personalizado): Next no hace nada si el hash ya es el
+  // de la URL, así que tras volver a subir el segundo clic no bajaba. Se atienden aquí, en captura,
+  // antes que el Link; los demás onClick (menú móvil, sabor del formulario) siguen ejecutándose.
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const link = (e.target as Element | null)?.closest?.("a[href]") as HTMLAnchorElement | null;
+      if (!link || link.target === "_blank") return;
+      const url = new URL(link.href, location.href);
+      if (url.origin !== location.origin || url.pathname !== location.pathname || !url.hash) return;
+      const target = document.getElementById(decodeURIComponent(url.hash.slice(1)));
+      if (!target) return;
+      e.preventDefault();
+      // "auto": el CSS (scroll-behavior) decide si es suave o instantáneo según prefers-reduced-motion
+      target.scrollIntoView({ behavior: "auto", block: "start" });
+      if (location.hash !== url.hash) history.pushState(null, "", url.pathname + url.hash);
+    };
+    document.addEventListener("click", onClick, true);
+    return () => document.removeEventListener("click", onClick, true);
+  }, []);
 
   useGSAP(
     () => {

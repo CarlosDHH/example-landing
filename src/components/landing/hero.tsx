@@ -1,12 +1,11 @@
 import Link from "next/link";
 import { site } from "@/config/site";
-import { CakeArt } from "@/components/ui/cake-art";
-import { ArrowRight, Heart, Leaf, Whisk } from "@/components/ui/icons";
-import { FlavorChips } from "./flavor-chips";
+import { CaretRight, ChefHat, Heart, Leaf } from "@/components/ui/icons";
+import { FlavorShowcase } from "./flavor-chips";
 
 const features = [
   { icon: Leaf, title: "Ingredientes de calidad", text: "Seleccionados a diario" },
-  { icon: Whisk, title: "Hecho a mano", text: "En cada detalle" },
+  { icon: ChefHat, title: "Hecho a mano", text: "En cada detalle" },
   { icon: Heart, title: "Pasteles a tu gusto", text: "Para cada ocasión" },
 ];
 
@@ -29,7 +28,7 @@ export function Hero() {
               href="/#personalizado"
               className="inline-flex items-center gap-2 rounded-full bg-cocoa-700 px-7 py-3.5 text-cream-50 transition-[background-color,scale] hover:bg-cocoa-800 active:scale-[0.96]"
             >
-              Diseña tu pastel <ArrowRight className="h-4 w-4" />
+              Diseña tu pastel <CaretRight />
             </Link>
             <Link
               href="/#pasteles"
@@ -38,8 +37,6 @@ export function Hero() {
               Ver catálogo
             </Link>
           </div>
-          {/* En móvil los sabores van aquí, en cuadrícula de 2 columnas */}
-          <FlavorChips className="mt-8 grid grid-cols-2 gap-2 sm:hidden" />
           <ul className="mt-10 grid max-w-xl grid-cols-3 gap-5">
             {features.map(({ icon: Icon, title, text }) => (
               <li key={title}>
@@ -58,12 +55,7 @@ export function Hero() {
           >
             Hecho con amor
           </p>
-          <CakeArt
-            tone="chocolate"
-            label="Foto: pastel estrella"
-            className="aspect-square rounded-t-[10rem] rounded-b-3xl shadow-2xl shadow-cocoa-900/10 sm:aspect-[4/4.2] sm:rounded-t-[12rem]"
-          />
-          <FlavorChips className="absolute top-1/2 -left-4 hidden -translate-y-1/2 flex-col gap-3 sm:flex lg:-left-10" />
+          <FlavorShowcase />
         </div>
       </div>
       {/* ola suave hacia la sección oscura (solo transform: no afecta el rendimiento) */}

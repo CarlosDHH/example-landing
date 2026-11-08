@@ -1,4 +1,5 @@
 import { CakeArt } from "@/components/ui/cake-art";
+import { CaretRight } from "@/components/ui/icons";
 
 const steps = [
   { n: "01", title: "Elige", text: "Sabor, tamaño y relleno.", tone: "caramel" },
@@ -22,7 +23,7 @@ export function Process() {
               <CakeArt tone={s.tone} className="mx-auto aspect-square w-full max-w-28 rounded-full ring-4 ring-cocoa-700 md:max-w-40" />
               {i < steps.length - 1 && (
                 <span className="absolute top-1/4 -right-6 hidden text-caramel-300 md:block" aria-hidden="true">
-                  →
+                  <CaretRight size={22} />
                 </span>
               )}
               <p className="mt-5 text-xs text-caramel-300">{s.n}</p>

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { site, whatsappLink } from "@/config/site";
-import { Facebook, Instagram, WhatsApp } from "@/components/ui/icons";
+import { CaretRight, Facebook, Instagram, WhatsApp } from "@/components/ui/icons";
 
 export function Footer() {
   return (
@@ -13,9 +13,9 @@ export function Footer() {
         </h2>
         <Link
           href="/#personalizado"
-          className="mt-8 inline-flex rounded-full border border-cream-100/40 px-7 py-3 text-sm transition-[background-color,color,scale] hover:bg-cream-100 hover:text-cocoa-800 active:scale-[0.96]"
+          className="group mt-8 inline-flex items-center gap-2 rounded-full border border-cream-100/40 px-7 py-3 text-sm transition-[background-color,color,scale] hover:bg-cream-100 hover:text-cocoa-800 active:scale-[0.96]"
         >
-          Crea tu pastel →
+          Crea tu pastel <CaretRight className="transition-transform group-hover:translate-x-1" />
         </Link>
       </div>
       <div className="border-t border-cream-100/10">

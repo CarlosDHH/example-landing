@@ -1,9 +1,9 @@
 import { site, whatsappLink } from "@/config/site";
-import { ArrowRight, Gift, Heart, Rings, Sparkle } from "@/components/ui/icons";
+import { ArrowRight, Champagne, Gift, Heart, Sparkle } from "@/components/ui/icons";
 
 const occasions = [
   { icon: Gift, title: "Cumpleaños", msg: "un pastel de cumpleaños" },
-  { icon: Rings, title: "Bodas y XV años", msg: "un pastel para boda o XV años" },
+  { icon: Champagne, title: "Bodas y XV años", msg: "un pastel para boda o XV años" },
   { icon: Heart, title: "Aniversarios", msg: "un pastel de aniversario" },
   { icon: Sparkle, title: "Solo porque sí", msg: "algo dulce" },
 ];
@@ -34,7 +34,7 @@ export function Occasions() {
                   <Icon className={`h-7 w-7 ${i === 0 ? "text-caramel-300" : "text-caramel-600"}`} />
                 </span>
                 <span className="text-xs font-medium tracking-[0.18em] uppercase">{title}</span>
-                <ArrowRight className="h-4 w-4 opacity-60 transition-transform group-hover:translate-x-1" />
+                <ArrowRight size={22} className="opacity-80 transition-transform group-hover:translate-x-1" />
               </a>
             </li>
           ))}

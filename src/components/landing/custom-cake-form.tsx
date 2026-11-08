@@ -85,7 +85,10 @@ export function CustomCakeForm() {
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setTouched(true);
-    setDone(buildMessage());
+    const text = buildMessage();
+    setDone(text);
+    // Sin segundo paso: el pedido se abre directo en WhatsApp (el enlace queda abajo por si el navegador lo bloquea)
+    window.open(whatsappLink(text), "_blank", "noopener,noreferrer");
     // Mostrar la confirmación completa (debajo del encabezado fijo)
     requestAnimationFrame(() =>
       document.getElementById("personalizado")?.scrollIntoView({ behavior: "smooth", block: "start" }),
@@ -111,23 +114,26 @@ export function CustomCakeForm() {
           <Reveal key="done">
           <div className="flex flex-col items-start justify-center rounded-3xl bg-cream-100 p-8 sm:p-10">
             <SuccessCheck className="text-caramel-500" />
-            <p className="eyebrow mt-4">¡Casi listo!</p>
+            <p className="eyebrow mt-4">¡Listo!</p>
             <h3 className="mt-3 font-serif text-4xl text-cocoa-800">
-              Tu pedido está armado
+              Abrimos WhatsApp con tu pedido
             </h3>
             <p className="mt-3 text-cocoa-700/80">
-              Envíanos el mensaje por WhatsApp para confirmar precio y anticipo.
+              Solo falta que presiones enviar en WhatsApp. Ahí confirmamos precio y anticipo.
             </p>
-            <pre className="mt-6 w-full rounded-2xl bg-white p-5 font-sans text-sm whitespace-pre-wrap text-cocoa-700">
-              {done}
-            </pre>
+            <details className="mt-5 w-full">
+              <summary className="cursor-pointer py-2 text-sm text-cocoa-700 underline">Ver el mensaje que armamos</summary>
+              <pre className="mt-2 w-full rounded-2xl bg-white p-5 font-sans text-sm whitespace-pre-wrap text-cocoa-700">
+                {done}
+              </pre>
+            </details>
             <a
               href={whatsappLink(done)}
               target="_blank"
               rel="noopener"
-              className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#1f8f4e] px-7 py-3.5 text-white transition-[background-color,scale] hover:bg-[#187540] active:scale-[0.96]"
+              className="mt-4 inline-flex items-center gap-2 py-3 text-sm font-medium text-cocoa-700 transition-colors hover:text-caramel-600"
             >
-              <WhatsApp className="h-5 w-5" /> Enviar por WhatsApp
+              <WhatsApp className="h-4 w-4" /> ¿No se abrió? Abrir WhatsApp otra vez
             </a>
             <button onClick={() => setDone(null)} className="mt-2 py-2 text-sm text-cocoa-700 underline">
               Hacer otro pedido
@@ -220,11 +226,11 @@ export function CustomCakeForm() {
                 </div>
               </div>
             </div>
-            <button className="inline-flex items-center justify-center gap-2 rounded-full bg-cocoa-700 px-7 py-4 text-cream-50 transition-[background-color,scale] hover:bg-cocoa-800 active:scale-[0.96] sm:col-span-2">
-              Continuar a WhatsApp
+            <button className="inline-flex items-center justify-center gap-2 rounded-full bg-[#1f8f4e] px-7 py-4 text-white transition-[background-color,scale] hover:bg-[#187540] active:scale-[0.96] sm:col-span-2">
+              <WhatsApp className="h-5 w-5" /> Enviar pedido por WhatsApp
             </button>
             <p className="text-center text-xs text-cocoa-700/80 sm:col-span-2">
-              Al enviar aceptas nuestro <a href="/aviso-de-privacidad" className="inline-block py-2 underline">aviso de privacidad</a>.
+              Se abrirá WhatsApp con tu pedido ya escrito. Al enviar aceptas nuestro <a href="/aviso-de-privacidad" className="inline-block py-2 underline">aviso de privacidad</a>.
             </p>
           </form>
           </Reveal>

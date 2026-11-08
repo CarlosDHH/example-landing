@@ -20,9 +20,10 @@ export function Popular() {
             href={whatsappLink(`Hola ${site.name}, ¿qué pasteles tienen disponibles para hoy?`)}
             target="_blank"
             rel="noopener"
-            className="inline-flex items-center gap-2 py-3 text-sm font-medium text-cocoa-700 hover:text-caramel-600"
+            className="group inline-flex items-center gap-2 py-3 text-sm font-medium text-cocoa-700 transition-colors hover:text-caramel-600"
           >
-            ¿Lo necesitas para hoy? Pregunta disponibilidad <ArrowRight className="h-4 w-4" />
+            ¿Lo necesitas para hoy? Pregunta disponibilidad{" "}
+            <ArrowRight className="transition-transform group-hover:translate-x-1" />
           </a>
         </div>
         <CatalogGrid products={products} categories={categories.filter((c) => used.has(c.slug))} />
